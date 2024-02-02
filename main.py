@@ -3,6 +3,7 @@ import requests
 import json
 from time import strftime, localtime
 from tqdm import tqdm
+from rclone_python import rclone
 
 args = sys.argv[1:]
 
@@ -20,6 +21,7 @@ if (args[0] and args[0] == "enableusb"):
     requests.get(MAIN_GOPRO_URL + '/gopro/camera/control/wired_usb?p=1')
     print('Enabled!')
 
+if (args[0] and args[0] == "parseserial"):
     print(f'USB Serial Socket: 172.2{args[1][-3]}.1{args[1][-2]}{args[1][-1]}.51:8080')
 
 if (args[0] and args[0] == "disableusb"):
@@ -72,4 +74,9 @@ if (args[0] and args[0] == "download"):
     requests.get(MAIN_GOPRO_URL + '/gopro/media/turbo_transfer?p=0')
     print("Turbo Disabled")
 
+    if (args[3] == 'up'):
+        rclone.copy(fileName, f'shsdrive:{fileName}')
+
+if (args[0] and args[0] == "upload"):
+    rclone.copy(args[1], f'shsdrive:{args[1]}')
 
